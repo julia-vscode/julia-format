@@ -1,0 +1,19 @@
+name: 'Julia Format'
+description: 'Check formatting of a Julia repository with juliaformat (JuliaFormatApp)'
+runs:
+  using: "composite"
+  steps:
+    - uses: julia-actions/install-juliaup@v2
+      with:
+        channel: release
+    - uses: julia-actions/cache@v2
+    - name: Install and precompile
+      shell: bash
+      # The committed Manifest.toml pins the exact versions of JuliaFormatApp
+      # and all of its dependencies; instantiate installs precisely those.
+      run: julia --color=yes -e 'import Pkg; Pkg.instantiate()'
+      env:
+        JULIA_PROJECT: ${{ github.action_path }}
+    - name: Check formatting
+      shell: bash
+      run: julia --color=yes --project="$GITHUB_ACTION_PATH" -m JuliaFormatApp --check --diff .
