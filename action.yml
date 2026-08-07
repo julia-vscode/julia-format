@@ -1,19 +1,81 @@
 name: 'Julia Format'
-description: 'Check formatting of a Julia repository with juliaformat (JuliaFormatApp)'
+description: 'Check or apply formatting of a Julia repository with juliaformat (JuliaFormatApp)'
+branding:
+  icon: 'align-left'
+  color: 'purple'
+inputs:
+  path:
+    description: 'Path to format, relative to the workspace'
+    required: false
+    default: '.'
+  mode:
+    description: >-
+      'check' fails when any file is not formatted and prints the diff;
+      'write' reformats the files in place.
+    required: false
+    default: 'check'
+  require-config:
+    description: >-
+      When true, the action is a no-op unless the repository contains a
+      JuliaFormat.toml (or juliaformat.toml) file.
+    required: false
+    default: 'false'
+outputs:
+  formatted:
+    description: >-
+      'true' when all files were formatted (or the action was skipped because
+      require-config found no config file), 'false' otherwise.
+    value: ${{ steps.format.outputs.formatted || 'true' }}
 runs:
   using: "composite"
   steps:
+    - name: Check for format configuration
+      id: config
+      shell: bash
+      run: |
+        skip=false
+        if [ "$REQUIRE_CONFIG" = "true" ]; then
+          if [ -z "$(find . \( -name 'JuliaFormat.toml' -o -name 'juliaformat.toml' \) -print -quit 2>/dev/null)" ]; then
+            echo "No JuliaFormat.toml found; skipping (require-config is true)."
+            skip=true
+          fi
+        fi
+        echo "skip=$skip" >> "$GITHUB_OUTPUT"
+      env:
+        REQUIRE_CONFIG: ${{ inputs.require-config }}
     - uses: julia-actions/install-juliaup@v2
+      if: ${{ steps.config.outputs.skip != 'true' }}
       with:
         channel: release
     - uses: julia-actions/cache@v2
+      if: ${{ steps.config.outputs.skip != 'true' }}
     - name: Install and precompile
+      if: ${{ steps.config.outputs.skip != 'true' }}
       shell: bash
       # The committed Manifest.toml pins the exact versions of JuliaFormatApp
       # and all of its dependencies; instantiate installs precisely those.
       run: julia --color=yes -e 'import Pkg; Pkg.instantiate()'
       env:
         JULIA_PROJECT: ${{ github.action_path }}
-    - name: Check formatting
+    - name: Format
+      id: format
+      if: ${{ steps.config.outputs.skip != 'true' }}
       shell: bash
-      run: julia --color=yes --project="$GITHUB_ACTION_PATH" -m JuliaFormatApp --check --diff .
+      run: |
+        case "$MODE" in
+          check) args=(--check --diff) ;;
+          write) args=(--write) ;;
+          *) echo "::error::Invalid mode '$MODE' (expected 'check' or 'write')"; exit 2 ;;
+        esac
+        set +e
+        julia --color=yes --project="$GITHUB_ACTION_PATH" -m JuliaFormatApp "${args[@]}" "${FMT_PATH:-.}"
+        code=$?
+        if [ $code -eq 0 ]; then
+          echo "formatted=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "formatted=false" >> "$GITHUB_OUTPUT"
+        fi
+        exit $code
+      env:
+        MODE: ${{ inputs.mode }}
+        FMT_PATH: ${{ inputs.path }}
