@@ -5,12 +5,15 @@ branding:
   color: 'purple'
 inputs:
   path:
-    description: 'Path to format, relative to the workspace'
+    description: >-
+      Paths to format, relative to the workspace. Multiple paths are separated
+      by spaces (paths containing spaces are not supported).
     required: false
     default: '.'
   mode:
     description: >-
       'check' fails when any file is not formatted and prints the diff;
+      'list' fails likewise but only names the files that would change;
       'write' reformats the files in place.
     required: false
     default: 'check'
@@ -64,11 +67,16 @@ runs:
       run: |
         case "$MODE" in
           check) args=(--check --diff) ;;
+          # `--check` without `--diff` prints one `would reformat <path>` line
+          # per file and sets the exit code (the CLI's own --list always exits
+          # 0, which is not what CI wants).
+          list) args=(--check) ;;
           write) args=(--write) ;;
-          *) echo "::error::Invalid mode '$MODE' (expected 'check' or 'write')"; exit 2 ;;
+          *) echo "::error::Invalid mode '$MODE' (expected 'check', 'list' or 'write')"; exit 2 ;;
         esac
         set +e
-        julia --color=yes --project="$GITHUB_ACTION_PATH" -m JuliaFormatApp "${args[@]}" "${FMT_PATH:-.}"
+        # Intentionally unquoted: the input is a space-separated path list.
+        julia --color=yes --project="$GITHUB_ACTION_PATH" -m JuliaFormatApp "${args[@]}" ${FMT_PATH:-.}
         code=$?
         if [ $code -eq 0 ]; then
           echo "formatted=true" >> "$GITHUB_OUTPUT"

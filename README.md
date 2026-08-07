@@ -40,8 +40,8 @@ jobs:
 
 | Input | Default | Description |
 | --- | --- | --- |
-| `path` | `.` | Path to format, relative to the workspace. |
-| `mode` | `check` | `check` fails when any file is not formatted and prints the diff; `write` reformats the files in place. |
+| `path` | `.` | Paths to format, relative to the workspace; separate multiple paths with spaces. |
+| `mode` | `check` | `check` fails when any file is not formatted and prints the diff; `list` fails likewise but only names the files; `write` reformats the files in place. |
 | `require-config` | `false` | When `true`, the action is a no-op unless the repository contains a `JuliaFormat.toml` (or `juliaformat.toml`) file. |
 
 ## Outputs
