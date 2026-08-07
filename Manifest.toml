@@ -102,7 +102,7 @@ version = "3.0.1"
 
 [[deps.JuliaFormatApp]]
 deps = ["ArgParse", "JuliaWorkspaces", "Logging", "PrecompileTools"]
-git-tree-sha1 = "977051906cc8e1dd3036f4e853d953b8b859c65b"
+git-tree-sha1 = "02f4d81f905f5789e1ba444ba1a119072c8e134e"
 repo-rev = "main"
 repo-url = "https://github.com/julia-vscode/JuliaFormatApp.jl"
 uuid = "335f3e5c-9abb-47b5-a2f9-4e51f56c5ccb"
