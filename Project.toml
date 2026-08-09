@@ -1,5 +1,5 @@
 [deps]
-JuliaFormatApp = "335f3e5c-9abb-47b5-a2f9-4e51f56c5ccb"
+FormatApp = "335f3e5c-9abb-47b5-a2f9-4e51f56c5ccb"
 
 [sources]
-JuliaFormatApp = {url = "https://github.com/julia-vscode/JuliaFormatApp.jl", rev = "main"}
+FormatApp = {url = "https://github.com/julia-vscode/FormatApp.jl", rev = "main"}

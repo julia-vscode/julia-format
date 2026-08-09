@@ -1,5 +1,5 @@
 name: 'Julia Format'
-description: 'Check or apply formatting of a Julia repository with juliaformat (JuliaFormatApp)'
+description: 'Check or apply formatting of a Julia repository with juliaformat (FormatApp)'
 branding:
   icon: 'align-left'
   color: 'purple'
@@ -55,7 +55,7 @@ runs:
     - name: Install and precompile
       if: ${{ steps.config.outputs.skip != 'true' }}
       shell: bash
-      # The committed Manifest.toml pins the exact versions of JuliaFormatApp
+      # The committed Manifest.toml pins the exact versions of FormatApp
       # and all of its dependencies; instantiate installs precisely those.
       run: julia --color=yes -e 'import Pkg; Pkg.instantiate()'
       env:
@@ -76,7 +76,7 @@ runs:
         esac
         set +e
         # Intentionally unquoted: the input is a space-separated path list.
-        julia --color=yes --project="$GITHUB_ACTION_PATH" -m JuliaFormatApp "${args[@]}" ${FMT_PATH:-.}
+        julia --color=yes --project="$GITHUB_ACTION_PATH" -m FormatApp "${args[@]}" ${FMT_PATH:-.}
         code=$?
         if [ $code -eq 0 ]; then
           echo "formatted=true" >> "$GITHUB_OUTPUT"

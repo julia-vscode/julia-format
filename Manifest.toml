@@ -2,7 +2,7 @@
 
 julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "396c031186805d1463792b138338fff2bb9229f3"
+project_hash = "779d6081c0a92a55b890a1227882c6cc6947a0e9"
 
 [[deps.ArgParse]]
 deps = ["Logging", "TextWrap"]
@@ -78,6 +78,14 @@ version = "0.1.11"
 uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 version = "1.11.0"
 
+[[deps.FormatApp]]
+deps = ["ArgParse", "JuliaWorkspaces", "Logging", "PrecompileTools"]
+git-tree-sha1 = "dfd798b9d14fe0d5ae372dc1f4f64afd1e923818"
+repo-rev = "main"
+repo-url = "https://github.com/julia-vscode/FormatApp.jl"
+uuid = "335f3e5c-9abb-47b5-a2f9-4e51f56c5ccb"
+version = "0.2.0-DEV"
+
 [[deps.Glob]]
 git-tree-sha1 = "246c628cec062230b7d183aab88841fa94fcabe9"
 uuid = "c27321d9-0574-5035-807b-f59d2c89b15c"
@@ -99,14 +107,6 @@ deps = ["CancellationTokens", "JSON", "Sockets", "UUIDs"]
 git-tree-sha1 = "89ced76119d7b8fbe51d0b9860833fe9904880b7"
 uuid = "b9b8584e-8fd3-41f9-ad0c-7255d428e418"
 version = "3.0.1"
-
-[[deps.JuliaFormatApp]]
-deps = ["ArgParse", "JuliaWorkspaces", "Logging", "PrecompileTools"]
-git-tree-sha1 = "02f4d81f905f5789e1ba444ba1a119072c8e134e"
-repo-rev = "main"
-repo-url = "https://github.com/julia-vscode/JuliaFormatApp.jl"
-uuid = "335f3e5c-9abb-47b5-a2f9-4e51f56c5ccb"
-version = "0.2.0-DEV"
 
 [[deps.JuliaFormatter]]
 deps = ["CommonMark", "Glob", "JuliaSyntax", "PrecompileTools", "TOML", "Test"]
