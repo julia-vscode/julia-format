@@ -1,5 +1,11 @@
 [deps]
 FormatApp = "335f3e5c-9abb-47b5-a2f9-4e51f56c5ccb"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 
-[sources]
-FormatApp = {url = "https://github.com/julia-vscode/FormatApp.jl", rev = "main"}
+[compat]
+FormatApp = "1.1"
+# Pinned deliberately. FormatApp has no JSON dependency of its own, so nothing in
+# this tree bounds the one JuliaWorkspaces pulls in through JSONRPC, and it would
+# otherwise resolve to 1.x here while julia-lint and julia-run-testitems stay on
+# 0.21. Lift this as part of the JSON v1 migration, not before.
+JSON = "0.21"
