@@ -46,11 +46,11 @@ runs:
         echo "skip=$skip" >> "$GITHUB_OUTPUT"
       env:
         REQUIRE_CONFIG: ${{ inputs.require-config }}
-    - uses: julia-actions/install-juliaup@v2
+    - uses: julia-actions/install-juliaup@v3
       if: ${{ steps.config.outputs.skip != 'true' }}
       with:
         channel: release
-    - uses: julia-actions/cache@v2
+    - uses: julia-actions/cache@v3
       if: ${{ steps.config.outputs.skip != 'true' }}
     # The toolkit -- FormatApp and the tree this repository's manifest pins -- is the same on
     # every run, so it does not belong in the job's depot where it is re-saved per run and
@@ -107,7 +107,7 @@ runs:
         "depot=$depot" >> $env:GITHUB_OUTPUT
         "cpu-target=$cpuTarget" >> $env:GITHUB_OUTPUT
     - name: Restore the toolkit depot
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       if: ${{ steps.config.outputs.skip != 'true' }}
       with:
         # Deliberately no `restore-keys`: a prefix match would load a depot precompiled by a
