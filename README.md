@@ -57,3 +57,24 @@ julia --project=. -e 'using Pkg; Pkg.update()'
 ```
 
 and commit the changed `Manifest.toml`.
+
+## Caching
+
+The action caches its own toolkit — FormatApp and the tree its `Manifest.toml`
+pins — in a depot of its own under `RUNNER_TEMP`, keyed on the runner OS and
+architecture, the Julia version and a hash of that manifest. Nothing
+run-specific enters the key, so the entry is written once and then only read,
+rather than re-saved on every run and duplicated for every pull request the way
+a depot cached with `julia-actions/cache` is.
+
+The toolkit is also precompiled against a portable CPU target. Julia's default,
+`native`, compiles package images for whichever machine precompiled them while
+recording only the literal string `native` in the cache path — so a depot moved
+between two runners with different CPUs looks valid, is rejected on load, and
+recompiles. GitHub's runner fleet is mixed enough for that to happen regularly;
+see [julia-actions/cache#114](https://github.com/julia-actions/cache/issues/114).
+A platform whose Julia does not accept the target gets a warning and Julia's
+default instead, keeping the behaviour it had before.
+
+None of this needs configuration, and nothing in your workflow should point at
+that depot.
